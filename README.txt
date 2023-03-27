@@ -104,6 +104,6 @@ There is no documentation about those quirks at the moment, so try to play it sa
 
 You can report bug reports at my (nextvolume's) email: tails92@gmail.com
 
-Do not forget the official web-page: http://unhaut.fav.cc/imbnes
+Do not forget the official web-page: https://web.archive.org/web/20171020074544/http://unhaut.fav.cc/imbnes
 
 Enjoy!
