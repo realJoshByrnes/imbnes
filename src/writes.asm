@@ -97,6 +97,13 @@ read2007
 		andi	t8,t8,$3FFF
 		bnez	at,notReadPPUPattern
 		sh		t8,$1800(s7)
+		
+; check if CHR is disabled		
+		la		t9,chrDisabled
+		lbu		t8,0(t9)
+		nop
+		bnez		t8,readDisabledChr
+		nop
 
 		la		t8,patBlocks
 		srl		at,v0,$08
@@ -107,6 +114,11 @@ read2007
 		addu	t8,t8,at
 		lbu		t8,$0000(t8)
 		nop
+		jr		ra
+		sb		t8,PPULatch(s7)
+
+readDisabledChr ; if CHR is disabled, always return 0x12
+		li		t8,$12
 		jr		ra
 		sb		t8,PPULatch(s7)
 
@@ -1207,6 +1219,8 @@ include mapper04.asm
 
 include mapper05.asm
 
+include mapper33.asm
+
 map7write
 		sll		v0,a1,$1B
 		sra		v0,v0,$03
@@ -1228,6 +1242,16 @@ map7write
 		nop
 
 		jr		t8
+		nop
+
+map10writeA
+		sw		ra,saveFP
+
+		li		a0,$04
+		jal		bankSwitch
+		sll		a1,a1,1
+		lw		ra,saveFP
+		j		bankSwitch
 		nop
 
 map9writeA
@@ -1673,6 +1697,200 @@ map66write
 		nop
 		jr		ra
 		nop
+		
+map38write
+		sw		ra,saveFP
+
+		li		a0,$04
+		move	v1,a1
+		andi		a1,v1,$3
+		
+		jal		bankSwitch
+		sll		a1,a1,$02
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		
+		li		a1,$00
+		srl		a0,v1,$2
+		andi		a0,$3
+		jal		bufLoadVROM
+		sll		a0,$3
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM		
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		lw		ra,saveFP
+		nop
+		jr		ra
+		nop
+
+map87write
+		sw		ra,saveFP
+	
+		move	v1,a1
+		andi		a1,1
+		sll		a1,1
+		srl		v1,1
+		andi		v1,1
+		or		a0,a1,v1
+
+		li		a1,0
+		jal		bufLoadVROM
+		sll		a0,$3
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM		
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		lw		ra,saveFP
+		nop
+		jr		ra
+		nop
+
+map140write
+		j		map66write
+		nop
+
+map180write
+		or		t8,ra,zero
+		li		a0,$6
+		jal		bankSwitch
+		sll		a1,a1,$01
+		j		bankSwitch
+		or		ra,t8,zero
+		
+map185write
+		li		v1,chrDisabled
+
+		li		a0,$13
+		beq		a0,a1,map185disablechr
+		nop
+		andi		a1,$F
+		beq		a1,zero,map185disablechr
+		nop
+
+; enable chr
+		sb		zero,0(v1)
+
+		jr		ra
+		nop
+		
+map185disablechr
+; disable chr
+		li		a0,$1
+		sb		a0,0(v1)
+		
+		jr		ra
+		nop
+		
+map70write
+		sw		ra,saveFP
+
+		move	v1,a1
+
+		li		$a0,4
+		srl		a1,4
+		jal		bankSwitch
+		sll		a1,1
+		jal		bankSwitch
+		nop
+		
+		and		a0,v1,$F
+		li		a1,0
+		jal		bufLoadVROM
+		sll		a0,$3
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM		
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		
+		lw		ra,saveFP
+		nop
+		jr		ra
+		nop
+		
+map79write
+		sw		ra,saveFP
+
+		andi		v1,a1,7
+		srl		a1,3
+		andi		a1,7
+		
+; a1 = prg reg, v1 = chr reg
+		sw		v1,map79chr
+
+		li		a0,$4
+		jal		bankSwitch
+		sll		a1,2
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		
+		li		a1,$00
+		lw		a0,map79chr
+		nop
+		jal		bufLoadVROM
+		sll		a0,v1,3
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		
+		lw		ra,saveFP
+		nop
+		jr		ra
+		nop
+		
+map79chr		dw 0
 
 justwrite50
 		or		at,t8,s7

@@ -3069,119 +3069,171 @@ absWrite3F
 endabsWrite3F
 dcb $8005A000-endabsWrite3F,0
 absWrite40
+		sw ra, saveRA2
+
 		la		v0,write4kjump
 		andi	at,t8,$1F
 		sll		at,at,$02
 		addu	v0,v0,at
 		lw		at,$0000(v0)
 		nop
-		jr		at
+		jalr		at
+		nop
+
+		lw ra, saveRA2
+		nop
+		jr ra
 		nop
 
 endabsWrite40
 dcb $8005A080-endabsWrite40,0
 absWrite41
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4100(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite41
 dcb $8005A100-endabsWrite41,0
 absWrite42
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4200(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite42
 dcb $8005A180-endabsWrite42,0
 absWrite43
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4300(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite43
 dcb $8005A200-endabsWrite43,0
 absWrite44
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4400(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite44
 dcb $8005A280-endabsWrite44,0
 absWrite45
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4500(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite45
 dcb $8005A300-endabsWrite45,0
 absWrite46
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4600(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite46
 dcb $8005A380-endabsWrite46,0
 absWrite47
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4700(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite47
 dcb $8005A400-endabsWrite47,0
 absWrite48
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4800(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite48
 dcb $8005A480-endabsWrite48,0
 absWrite49
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4900(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite49
 dcb $8005A500-endabsWrite49,0
 absWrite4A
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4A00(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite4A
 dcb $8005A580-endabsWrite4A,0
 absWrite4B
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4B00(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite4B
 dcb $8005A600-endabsWrite4B,0
 absWrite4C
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4C00(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite4C
 dcb $8005A680-endabsWrite4C,0
 absWrite4D
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4D00(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite4D
 dcb $8005A700-endabsWrite4D,0
 absWrite4E
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4E00(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite4E
 dcb $8005A780-endabsWrite4E,0
 absWrite4F
 		or		at,t8,s7
-		jr		ra
 		sb		a1,$4F00(at)
+		lw		at,write40map
+		nop
+		jr		at
+		nop
 
 endabsWrite4F
 dcb $8005A800-endabsWrite4F,0
@@ -3314,256 +3366,573 @@ absWrite5F
 endabsWrite5F
 dcb $8005B000-endabsWrite5F,0
 absWrite60
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6000(at)
-
 endabsWrite60
 dcb $8005B080-endabsWrite60,0
 absWrite61
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6100(at)
-
 endabsWrite61
 dcb $8005B100-endabsWrite61,0
 absWrite62
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6200(at)
 
 endabsWrite62
 dcb $8005B180-endabsWrite62,0
 absWrite63
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6300(at)
 
 endabsWrite63
 dcb $8005B200-endabsWrite63,0
 absWrite64
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6400(at)
 
 endabsWrite64
 dcb $8005B280-endabsWrite64,0
 absWrite65
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6500(at)
 
 endabsWrite65
 dcb $8005B300-endabsWrite65,0
 absWrite66
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6600(at)
 
 endabsWrite66
 dcb $8005B380-endabsWrite66,0
 absWrite67
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6700(at)
 
 endabsWrite67
 dcb $8005B400-endabsWrite67,0
 absWrite68
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6800(at)
 
 endabsWrite68
 dcb $8005B480-endabsWrite68,0
 absWrite69
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6900(at)
 
 endabsWrite69
 dcb $8005B500-endabsWrite69,0
 absWrite6A
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6A00(at)
 
 endabsWrite6A
 dcb $8005B580-endabsWrite6A,0
 absWrite6B
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6B00(at)
 
 endabsWrite6B
 dcb $8005B600-endabsWrite6B,0
 absWrite6C
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6C00(at)
 
 endabsWrite6C
 dcb $8005B680-endabsWrite6C,0
 absWrite6D
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6D00(at)
 
 endabsWrite6D
 dcb $8005B700-endabsWrite6D,0
 absWrite6E
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6E00(at)
 
 endabsWrite6E
 dcb $8005B780-endabsWrite6E,0
 absWrite6F
+		sw		ra,saveRA2
+
+		lw		at,write60map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$6F00(at)
 
 endabsWrite6F
 dcb $8005B800-endabsWrite6F,0
 absWrite70
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7000(at)
 
 endabsWrite70
 dcb $8005B880-endabsWrite70,0
 absWrite71
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7100(at)
 
 endabsWrite71
 dcb $8005B900-endabsWrite71,0
 absWrite72
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7200(at)
 
 endabsWrite72
 dcb $8005B980-endabsWrite72,0
 absWrite73
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7300(at)
 
 endabsWrite73
 dcb $8005BA00-endabsWrite73,0
 absWrite74
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7400(at)
 
 endabsWrite74
 dcb $8005BA80-endabsWrite74,0
 absWrite75
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7500(at)
 
 endabsWrite75
 dcb $8005BB00-endabsWrite75,0
 absWrite76
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7600(at)
 
 endabsWrite76
 dcb $8005BB80-endabsWrite76,0
 absWrite77
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7700(at)
 
 endabsWrite77
 dcb $8005BC00-endabsWrite77,0
 absWrite78
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7800(at)
 
 endabsWrite78
 dcb $8005BC80-endabsWrite78,0
 absWrite79
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7900(at)
 
 endabsWrite79
 dcb $8005BD00-endabsWrite79,0
 absWrite7A
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7A00(at)
 
 endabsWrite7A
 dcb $8005BD80-endabsWrite7A,0
 absWrite7B
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7B00(at)
-
+		
 endabsWrite7B
 dcb $8005BE00-endabsWrite7B,0
 absWrite7C
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7C00(at)
 
 endabsWrite7C
 dcb $8005BE80-endabsWrite7C,0
 absWrite7D
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7D00(at)
-
 endabsWrite7D
 dcb $8005BF00-endabsWrite7D,0
 absWrite7E
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7E00(at)
 
 endabsWrite7E
 dcb $8005BF80-endabsWrite7E,0
 absWrite7F
+		sw		ra,saveRA2
+
+		lw		at,write70map
+		li a0,$0
+		jalr		at
+		nop
+
 		sb		s5,SRAMchanged(s7)
 		or		at,t8,s7
+		
+		lw		ra,saveRA2
+		nop
 		jr		ra
 		sb		a1,$7F00(at)
 

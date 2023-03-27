@@ -23,7 +23,7 @@
 ; emulator's code with only certain special purpose sections broken
 ; out into separate files.
 
-COPYRIGHT_TIME	=	420			; 6 second splash screen = 420
+COPYRIGHT_TIME	=	50;420			; 6 second splash screen = 420
 INIT_GAME_NUM	=	$0000
 
 GP0     equ $1810               ; some equ's for easy ref.
@@ -3254,17 +3254,17 @@ askSave
 
 		la		a0,saveMsg1
 		li		a1,3
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,saveMsg2
 		li		a1,8
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,saveMsg3
 		li		a1,10
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		lbu		t8,SRAMloaded
@@ -3274,7 +3274,7 @@ askSave
 
 		la		a0,saveMsg4
 		li		a1,12
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 skipDelOption
@@ -3302,7 +3302,7 @@ save_start
 
 		la		a0,saveMsg6			;give saving message
 		li		a1,17
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		jal		updateSaveMenuDisplay
@@ -3358,7 +3358,7 @@ notSaveIt
 		
 		la		a0,saveMsg7
 		li		a1,12
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		jal		updateSaveMenuDisplay
@@ -3700,22 +3700,22 @@ initOptionsScreen
 
 		la		a0,options1
 		li		a1,2
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,options2
 		li		a1,4
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,options3
 		li		a1,6
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,optionsEnd
 		li		a1,18
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 		
 		jal		updateOptionsMenuDisplay
@@ -3735,7 +3735,7 @@ initRomScreen
 
 		la		a0,txtEnterCode
 		li		a1,20
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		jal		romMenuUpdPageSelNums
@@ -3841,12 +3841,12 @@ optionGameGenie
 
 		la		a0,GGline1
 		li		a1,3
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,GGline2
 		li		a1,6
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		li		a3,0
@@ -4266,12 +4266,12 @@ optionScreenAdjust
 
 		la		a0,screenPosMsg1
 		li		a1,6
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,screenPosMsg2
 		li		a1,18
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		jal		VSync
@@ -4308,10 +4308,10 @@ btnCfgLoop
 		la		a0,btnCfgA
 		sll		at,s0,$5
 		addu	a0,a0,at
-		addu	a0,a0,s0
+		;addu	a0,a0,s0
 		li		a1,5
 		addu	a1,a1,s0
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 		jal		VSync
 		nop
@@ -4660,7 +4660,7 @@ romSelect_start
 
 		la		a0,saveMsg5
 		li		a1,20
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 		jal		VSync
 		nop
@@ -4897,37 +4897,37 @@ copyright
 
 		la		a0,copy1
 		li		a1,1
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,copy2
 		li		a1,2
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,copy3
 		li		a1,8
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,copy4
 		li		a1,15
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,copy5
 		li		a1,16
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,copy6
 		li		a1,18
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		la		a0,copy7
 		li		a1,19
-		jal		writeStrEnc
+		jal		writeStr
 		nop
 
 		jal		VSync
@@ -5300,6 +5300,15 @@ nesReset
 loadROM
 		la		fp, rom_img
 
+;		la		t8,mapperWasUnsupported ; reset "mapper was unsupported" flag
+;		sb		zero,t8
+		
+		la		t8,chrDisabled ; reset CHR disabled flag
+		sb		zero,t8
+		
+		la		t8,mapperNoSRAM ; reset "mapper no sram" flag
+		sb		zero,t8
+
 		la		t8,realSpriteSetup	; make this the default sprite handler
 		sw		t8,sprFunc
 
@@ -5342,6 +5351,24 @@ loadROM
 		srlv	t9,t9,at
 		ori		t9,t9,$08
 		sb		t9,mirrorSel
+	
+		la		a0,map0write
+		sw		a0,write40map
+		sw		a0,write60map
+		sw		a0,write70map
+		sw		a0,write80map
+		sw		a0,write90map
+		sw		a0,writeA0map
+		sw		a0,writeB0map
+		sw		a0,writeC0map
+		sw		a0,writeD0map
+		sw		a0,writeE0map
+		sw		a0,writeF0map
+		
+		la		a0,justwrite50
+		sw		a0,write50map
+		sw		a0,write51map
+		sw		a0,write52map
 	
 		andi	t9,t8,$00F0
 		srl		t9,t9,$04
@@ -5617,13 +5644,18 @@ noVROMmap4
 
 		sb		zero,mapReg0		;needs to be set up this way, not $0C
 
+map04done
+
 		j		mapperDone
 		nop
 
 notMap04
-		li		at,$05
-		bne		t9,at,notMap05
-		nop
+		;li		at,$05
+		;bne		t9,at,notMap05
+		;nop
+
+		;j		notMap05
+		;nop
 
 ;-------------
 ;MAPPER 5 init
@@ -5666,10 +5698,10 @@ notMap04
 		;la		a0,map5write52
 		;sw		a0,write52map
 
-		j		mapperDone
-		nop
+		;j		mapperDone
+		;nop
 
-notMap05
+;notMap05
 		li		at,$07
 		bne		t9,at,notMap07
 		nop
@@ -5709,7 +5741,6 @@ notMap07
 ;-------------
 ;MAPPER 9 init
 ;-------------
-
 		li		a0,$4
 		jal		bankSwitch			;first 8k
 		li		a1,$0
@@ -5722,11 +5753,13 @@ notMap07
 		jal		bankSwitch
 		nop
 
+
 		la		a0,map0write
 		sw		a0,write80map
 		sw		a0,write90map
 		la		a0,map9writeA
 		sw		a0,writeA0map
+map9AfterPRGSetup
 		la		a0,map9writeB
 		sw		a0,writeB0map
 		la		a0,map9writeC
@@ -5753,6 +5786,10 @@ notMap07
 		sb		t8,mapReg2
 		sb		t8,mapReg3
 
+; skip hack if the ROM is mapper 10
+		li		at,10
+		beq		t9,at,map9AfterHack
+		nop
 		
 		lbu		t8,rom_img+$1A9B0
 		nop
@@ -5788,10 +5825,38 @@ punchoutLoopbegin
 		bnez	a1,punchoutLoopbegin
 		addiu	a0,a0,$04
 
+map9AfterHack
 		j		mapperDone
 		nop
 
 notMap9
+		li		at,10
+		bne		t9,at,notMap10
+		nop
+
+;--------------
+;MAPPER 10 init
+;--------------
+		li		a0,$4
+		jal		bankSwitch			;first 16k
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		
+		li		a0,$6				;last 16k
+		jal		bankSwitch
+		li		a1,$FE
+		jal		bankSwitch
+		nop
+		
+; except for PRG setup and bank-switching, it is identical to mapper 9
+		la		a0,map10writeA
+		sw		a0,writeA0map
+
+		j		map9AfterPRGSetup
+		nop
+
+notMap10
 		li		at,11
 		bne		t9,at,notMap11
 		nop
@@ -5844,10 +5909,41 @@ notMap9
 		nop
 
 notMap11
-		li		at,34
-		bne		t9,at,notMap34
+		li		at,33
+		bne		t9,at,notMap33
 		nop
 
+;--------------
+;MAPPER 33 init (Don Doko Don)
+;--------------
+		
+		li		a0,$4
+		jal		bankSwitch	;first 16k
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		
+		li		a0,$6
+		jal		bankSwitch	;last 16k
+		li		a1,$FE
+		jal		bankSwitch
+		nop
+
+		la		a0,map33write8
+		sw		a0,write80map
+		la		a0,map33writeA
+		sw		a0,writeA0map
+		la		a0,map33writeC
+		sw		a0,writeC0map
+		la		a0,map33writeE
+		sw		a0,writeE0map
+		
+		j		mapperDone
+		nop
+
+notMap33
+		li		at,34
+		bne		t9,at,notMap34
 ;--------------
 ;MAPPER 34 init (Deadly Towers)
 ;--------------
@@ -5904,6 +6000,51 @@ noVROMmap34
 		nop
 
 notMap34
+		li		at,38
+		bne		t9,at,notMap38
+		nop
+		
+;--------------
+;MAPPER 38 init (Crime Busters)
+;--------------
+
+		li		a0,$4
+		jal		bankSwitch			;first 32k
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		
+		li		a0,$00
+		li		a1,$00
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		la		a0,map38write
+		sw		a0,write70map
+
+		j		mapperDone
+		nop
+
+notMap38
 		li		at,66
 		bne		t9,at,notMap66
 		nop
@@ -5956,9 +6097,11 @@ notMap34
 		nop
 
 notMap66
-		li		at,69
-		bne		t9,at,notMap69
-		nop
+		;li		at,69
+		;bne		t9,at,notMap69
+		;nop
+		;j		notMap69
+		;nop
 
 ;--------------
 ;MAPPER 69 init
@@ -6000,21 +6143,72 @@ notMap66
 		;jal		bufLoadVROM
 		;nop
 
-noVROMmap69
+;noVROMmap69
 
 		;la		a0,map69write8
 		;sw		a0,write80map
 		;la		a0,map69writeA
 		;sw		a0,writeA0map
 
+		;j		mapperDone
+		;nop
+
+;notMap69
+		li		at,70
+		bne		t9,at,notMap70
+		nop
+
+;--------------
+;MAPPER 70 init (Space Shadow)
+;--------------
+		li		a0,$4
+		jal		bankSwitch
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		li		a0,$6
+		jal		bankSwitch
+		li		a1,$FE
+		jal		bankSwitch
+		nop
+		
+		li		a0,$00
+		li		a1,$00
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		
+		la		a0,map70write
+		sw		a0,write80map
+		sw		a0,write90map
+		sw		a0,writeA0map
+		sw		a0,writeB0map
+		sw		a0,writeC0map
+		sw		a0,writeD0map
+		sw		a0,writeE0map
+		sw		a0,writeF0map
+		
 		j		mapperDone
 		nop
 
-notMap69
+notMap70
 		li		at,71
 		bne		t9,at,notMap71
 		nop
-
 ;--------------
 ;MAPPER 71 init (Dizzy)
 ;--------------
@@ -6037,11 +6231,327 @@ notMap69
 		sw		a0,writeD0map
 		sw		a0,writeE0map
 		sw		a0,writeF0map
-
+		
 		j		mapperDone
 		nop
 
 notMap71
+		li		at,79
+		bne		t9,at,notMap79
+		nop
+
+;--------------
+;MAPPER 79 init
+;--------------
+		li		a0,$4
+		jal		bankSwitch
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		
+		li		a0,$00
+		li		a1,$00
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		
+		la		a0,map79write
+		sw		a0,write40map
+		sw		a0,write50map
+		sw		a0,write51map
+		sw		a0,write52map
+
+		j		mapperDone
+		nop
+
+notMap79
+		li		at,87
+		bne		t9,at,notMap87
+		nop
+
+;--------------
+;MAPPER 87 init (Argus)
+;--------------
+
+		li		a0,$4
+		jal		bankSwitch
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+
+		li		a0,$00
+		li		a1,$00
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		
+		li		a0,$1
+		la		a1,mapperNoSRAM
+		sb		a0,0(a1)
+		
+		la		a0,map87write
+		sw		a0,write60map
+		
+		j		mapperDone
+		nop
+
+
+notMap87
+		li		at,140
+		bne		t9,at,notMap140
+		nop
+
+;--------------
+;MAPPER 140 init (Bio Senshi Dan)
+;--------------
+
+		li		a0,$4
+		jal		bankSwitch			;first 32k
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		jal		bankSwitch
+		nop
+		
+		li		a0,$00
+		li		a1,$00
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		li		a0,$1
+		la		a1,mapperNoSRAM
+		sb		a0,0(a1)
+
+		la		a0,map140write
+		sw		a0,write60map
+		sw		a0,write70map
+		
+		j		mapperDone
+		nop
+
+notMap140
+		li		at,180
+		bne		t9,at,notMap180
+		nop
+
+;--------------
+;MAPPER 180 init (Crazy Climber)
+;--------------
+
+		li		a0,$4
+		jal		bankSwitch
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		li		a0,$6
+		jal		bankSwitch
+		li		a1,$FE
+		jal		bankSwitch
+		nop
+
+		la		a0,map180write
+		sw		a0,write80map
+		sw		a0,writeA0map
+		sw		a0,writeC0map
+		sw		a0,writeE0map
+		sw		a0,write90map
+		sw		a0,writeB0map
+		sw		a0,writeD0map
+		sw		a0,writeF0map
+
+		j		mapperDone
+		nop
+
+notMap180
+		li		at,185
+		bne		t9,at,notMap185
+		nop
+
+;-------------
+;MAPPER 185 init
+;-------------
+
+		li		a0,$4
+		jal		bankSwitch
+		li		a1,$0
+		jal		bankSwitch
+		nop
+		li		a0,$6
+		jal		bankSwitch
+		li		a1,$FE
+		jal		bankSwitch
+		nop
+
+		li		a0,$00
+		li		a1,$00
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 0
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM		;pattern 1
+		nop
+		jal		bufLoadVROM
+		nop
+		jal		bufLoadVROM
+		nop
+		
+		la		a0,map185write
+		sw		a0,write80map
+		sw		a0,write90map
+		sw		a0,writeA0map
+		sw		a0,writeB0map
+		sw		a0,writeC0map
+		sw		a0,writeD0map
+		sw		a0,writeE0map
+		sw		a0,writeF0map
+
+		j		mapperDone
+		nop
+
+notMap185
+
+;mapperUnsupported
+;		sb t9, unsupportedMapperNumber
+;
+;		jal		textMode
+;		nop
+
+;		la		a0,mapperUnsupportedMsg1
+;		li		a1,0
+;		jal		writeStr
+;		nop
+		
+;		la		a0,mapperUnsupportedMsg2
+;		li		a1,1
+;		jal		writeStr
+;		nop
+		
+		; if we only have one game, we won't return anywhere
+;		lw		a0,maxgamenum
+;		nop
+;		beqz		a0,displayUnsupportedMapperNumber
+;		nop
+		
+;		la		a0,mapperUnsupportedMsg3
+;		li		a1,4
+;		jal		writeStr
+;		nop
+
+;displayUnsupportedMapperNumber
+;		lbu		a0, unsupportedMapperNumber
+;		nop
+;		srl		a0, 4
+;		li		a1, 1
+;		li		a2, 17
+;		jal		writeHexChar
+;		nop
+;		
+;		lbu		a0, unsupportedMapperNumber
+;		nop
+;		andi		a0, $F
+;		li		a1, 1
+;		li		a2, 18
+;		jal		writeHexChar
+;		nop
+		
+;		jal		VSync
+;		nop
+
+;		li		a0,TEXT_PRIM_ADDR
+;		jal		gpuDMAlist
+;		nop
+		
+;		jal		gpuSync
+;		nop
+		
+;		lw		a0, vSyncCount
+;mapperUnsupported_loop1
+;		lw		a1, vSyncCount
+;		li		a2, 300
+		
+;		subu		a1, a0
+;		subu		a2, a1
+		
+;		bgtz		a2, mapperUnsupported_loop1
+;		nop
+		
+;		li		a0, 1 ; set "mapper was unsupported" flag
+;		sb		a0, mapperWasUnsupported
+;
+		; if we only have a game, we don't need to go to the selection screen
+;		lw		a0,maxgamenum
+;		nop
+;		beqz		a0,mapperUnsupported_loop2
+;		nop
+
+		; go to the selection screen
+;		j		resetStuff
+;		nop
+		
+;mapperUnsupported_loop2 ; this one is an infinite loop
+;		j		mapperUnsupported_loop2
+;		nop
+
 mapperDone
 
 		j		afterLoad
@@ -7233,6 +7743,16 @@ soundSilenceLoop
 		jal		restoreVars			;restore emulation variables to orig vals
 		nop
 
+		lbu		t0,mapperNoSRAM
+		nop
+		bnez		t0,noSaveQuery
+		nop
+
+	;	lbu		t0,mapperWasUnsupported
+	;	nop
+	;	bnez	t0,noSaveQuery
+	;	nop
+
 		lbu		t0,SRAMchanged(s7)
 		nop
 		beqz	t0,noSaveQuery
@@ -7374,7 +7894,7 @@ textMakeLoop
 		subu	v0,a0,at
 
 ;---------------------------------------------------------------------
-writeStrEnc ; a0=addr of 32 byte encoded string  a1=line# to write to
+writeStr ; a0=addr of 32 byte encoded string  a1=line# to write to
 ;---------------------------------------------------------------------
 
 		sw		t1,saveT1
@@ -7388,19 +7908,10 @@ writeStrEnc ; a0=addr of 32 byte encoded string  a1=line# to write to
 		addu	t0,t0,a1
 		li		t1,32
 
-		lbu		t4,32(a0)
-		nop
-		
-writeStrEncLoop
+writeStrLoop
+		; t2 contains the letter
 		lbu		t2,$0000(a0)
 		addiu	a0,a0,1
-		srl		at,t4,$07
-		sll		t4,t4,$01
-		or		t4,t4,at
-		xori	t4,t4,$A6
-		andi	t4,t4,$FF
-		addu	t2,t2,t4
-		andi	t2,t2,$FF		; t2 now has decoded letter
 		
 		andi	t3,t2,$1F
 		sll		t3,t3,$03
@@ -7410,7 +7921,7 @@ writeStrEncLoop
 		sh		t2,$000C(t0)
 		addiu	t0,t0,$14
 		subiu	t1,t1,1
-		bnez	t1,writeStrEncLoop
+		bnez	t1,writeStrLoop
 		nop
 
 		lw		t1,saveT1
@@ -8626,9 +9137,12 @@ align 2
 oldkeys	dh $FFFF
 
 align 4
+write40map	dw map0write
 write50map	dw justwrite50
 write51map	dw justwrite50
 write52map	dw justwrite50
+write60map	dw map0write
+write70map	dw map0write
 write80map	dw map0write
 writeA0map	dw map0write
 writeC0map	dw map0write
@@ -8854,45 +9368,52 @@ db $44, $80, $71, $80, $62, $80, $71, $80, $53, $80, $71, $80, $62, $80, $71, $8
 db $35, $80, $71, $80, $62, $80, $71, $80, $53, $80, $71, $80, $62, $80, $71, $80
 db $44, $80, $71, $80, $62, $80, $71, $80, $53, $80, $71, $80, $62, $80, $71, $80
 
-copy1		db $03,$54,$8E,$CB,$A4,$6E,$B3,$E9,$0F,$5B,$DA,$DE,$D3,$8A,$05,$A4,$08,$55,$E0,$9D,$AF,$6E,$EB,$A4,$CA,$49,$97,$9D,$91,$4B,$C3,$B7,$7C ;"an NES emulator for PSX (c) 2003"
-copy2		db $06,$8E,$9D,$7F,$3B,$B3,$A4,$04,$5F,$8E,$BE,$CB,$87,$F4,$F2,$C2,$28,$DA,$EC,$CC,$8C,$08,$ED,$15,$5A,$8E,$9D,$7F,$3B,$B3,$A4,$C2,$5E ;"       by Allan Blomquist       "
-copy3		db $4A,$15,$70,$59,$F7,$55,$25,$E8,$77,$5E,$B7,$A1,$4B,$2C,$F3,$2D,$4A,$43,$95,$8C,$F7,$82,$E2,$F6,$5D,$23,$82,$59,$F7,$2C,$D1,$E8,$38 ;"     It Might Be NES v1.3.2     "
-copy4		db $18,$9E,$9D,$38,$AF,$F1,$7B,$18,$5E,$BE,$AC,$30,$AE,$36,$28,$12,$6B,$6A,$7B,$21,$81,$16,$7F,$0A,$6A,$AF,$55,$30,$AA,$35,$28,$C9,$57 ;" This software is FREEware and  "
-copy5		db $29,$D7,$0F,$73,$13,$50,$47,$A7,$5D,$D7,$2E,$97,$E5,$A3,$68,$C4,$6D,$D7,$35,$A0,$E5,$91,$67,$D1,$29,$1D,$3B,$A4,$32,$50,$19,$78,$A8 ;"  CAN NOT be sold in any form   "
-copy6		db $EC,$52,$E5,$50,$5E,$C5,$6A,$20,$38,$6C,$E5,$A0,$5E,$C6,$6C,$18,$3C,$72,$2E,$9E,$5A,$C5,$6E,$E5,$2F,$A1,$32,$50,$19,$78,$29,$D7,$49 ;"    email: pencap@iname.com     "
-copy7		db $52,$7B,$F8,$19,$6E,$76,$75,$33,$50,$82,$BF,$DF,$29,$BF,$7A,$21,$4A,$77,$F8,$DE,$61,$B7,$7A,$24,$3E,$73,$F8,$15,$28,$B9,$6E,$EE,$41 ;"visit http://imbnes.gamebase.ca/"
+copy1		db "  NES emulator for PlayStation  "
+copy2		db "                                "
+copy3		db "     It Might Be NES v1.3.4     "
+copy4		db " This program is licensed under "
+copy5		db "    version 3 of the GNU GPL    "
+copy6		db " Original code: Allan Blomquist "
+copy7		db "   http://unhaut.fav.cc/imbnes  "
 
-saveMsg1	db $07,$C0,$D9,$AC,$4B,$63,$B6,$86,$5D,$D5,$E0,$BC,$9E,$13,$AB,$82,$54,$D1,$91,$BC,$9E,$58,$A8,$41,$3A,$BE,$B2,$94,$59,$21,$72,$41,$DF ;" The previous game used SRAM... "
-saveMsg2	db $B4,$A2,$C6,$0E,$D1,$BE,$95,$00,$B4,$D5,$F8,$2F,$CB,$7D,$93,$0A,$B4,$EF,$0B,$5B,$ED,$CF,$98,$BB,$F7,$E3,$18,$52,$9E,$7D,$3F,$BB,$65 ;"    Save SRAM to memory card    "
-saveMsg3	db $3A,$B5,$B0,$DA,$F6,$2E,$DD,$00,$5E,$04,$B0,$28,$45,$82,$DD,$53,$7B,$0B,$F5,$DA,$29,$60,$FE,$2D,$3A,$B5,$B0,$DA,$F6,$2E,$DD,$00,$20 ;"        Do not save SRAM        "
-saveMsg4	db $47,$0B,$B8,$A6,$93,$50,$E8,$A6,$47,$3E,$C6,$82,$74,$0B,$DA,$B3,$96,$58,$94,$AE,$8C,$58,$E3,$B3,$A0,$0B,$D7,$A2,$99,$4F,$94,$61,$BF ;"  Delete SRAM from memory card  "
-saveMsg5	db $3A,$B5,$B0,$DA,$F6,$2E,$DD,$00,$3A,$E1,$FF,$1B,$3A,$77,$2B,$47,$3A,$E8,$E2,$FB,$23,$3C,$EB,$0E,$3A,$B5,$B0,$DA,$F6,$2E,$DD,$00,$20 ;"         Loading SRAM...        "
-saveMsg6	db $A6,$CE,$1E,$7E,$3D,$BF,$BC,$B2,$A6,$CE,$1E,$B1,$7E,$15,$05,$00,$ED,$DC,$2C,$8C,$3D,$BF,$BC,$B2,$A6,$CE,$1E,$7E,$3D,$BF,$BC,$B2,$6E ;"           Saving...            "
-saveMsg7	db $54,$E1,$48,$09,$98,$69,$57,$EB,$54,$E1,$6C,$4E,$E4,$AE,$AB,$34,$A2,$28,$56,$17,$A6,$69,$57,$EB,$54,$E1,$48,$09,$98,$69,$57,$EB,$35 ;"          Deleting...           "
+saveMsg1	db " The previous game used SRAM... "
+saveMsg2	db "    Save SRAM to memory card    "
+saveMsg3	db "        Do not save SRAM        "
+saveMsg4	db "  Delete SRAM from memory card  "
+saveMsg5	db "         Loading SRAM...        "
+saveMsg6	db "           Saving...            "
+saveMsg7	db "          Deleting...           "
 
-options1	db $8F,$9B,$73,$23,$C3,$04,$82,$85,$8F,$9B,$73,$4A,$04,$51,$C7,$85,$B6,$E0,$C1,$6C,$08,$04,$82,$85,$8F,$9B,$73,$23,$C3,$04,$82,$85,$9B ;"           Game Genie           "
-options2	db $58,$E9,$58,$E9,$58,$E9,$58,$E9,$58,$0B,$AD,$3D,$AC,$38,$A6,$E9,$7B,$38,$A6,$2F,$A1,$30,$58,$E9,$58,$E9,$58,$E9,$58,$E9,$58,$E9,$37 ;"         Button Config          "
-options3	db $2D,$DF,$FC,$32,$A5,$D0,$1A,$76,$2D,$12,$3F,$84,$EA,$15,$68,$76,$4E,$23,$46,$87,$F8,$24,$1A,$76,$2D,$DF,$FC,$32,$A5,$D0,$1A,$76,$AA ;"         Screen Adjust          "
-optionsEnd	db $4E,$1D,$80,$39,$B7,$AC,$D2,$08,$8F,$60,$CB,$39,$0B,$FB,$D2,$0D,$8F,$6A,$C5,$39,$E4,$F1,$20,$3B,$4E,$1D,$80,$39,$B7,$AC,$D2,$E6,$3A ;"       Back to Game Menu        "
+options1	db "           Game Genie           "
+options2	db "         Button Config          "
+options3	db "         Screen Adjust          "
+optionsEnd	db "       Back to Game Menu        "
 
-screenPosMsg1	db $59,$F7,$2C,$01,$37,$9D,$5E,$C4,$A2,$46,$7A,$D1,$3B,$8D,$67,$B5,$9E,$45,$2C,$28,$31,$9E,$5D,$70,$7D,$04,$7C,$12,$2C,$4A,$15,$70,$B0 ;"   Position screen with D-pad   "
-screenPosMsg2	db $1E,$7E,$3D,$EF,$0E,$F7,$F9,$21,$1E,$B1,$71,$E0,$EE,$E6,$A6,$25,$66,$C3,$8B,$BF,$02,$FB,$F4,$17,$71,$C6,$82,$03,$BC,$B2,$A6,$CE,$52 ;"   Press START when finished    "
+screenPosMsg1	db "   Position screen with D-pad   "
+screenPosMsg2	db "   Press START when finished    "
 
-btnCfgA			db $CF,$1C,$A2,$77,$14,$6F,$C5,$25,$FD,$41,$A5,$25,$F0,$2A,$80,$33,$CF,$1C,$72,$25,$CF,$1C,$72,$25,$CF,$1C,$72,$25,$CF,$1C,$72,$25,$FB ;"  Press NES A...                "
-btnCfgB			db $7B,$33,$D3,$16,$47,$D9,$E0,$9F,$A9,$58,$D6,$C4,$24,$94,$9B,$AD,$7B,$33,$A3,$C4,$02,$86,$8D,$9F,$7B,$33,$A3,$C4,$02,$86,$8D,$9F,$81 ;"  Press NES B...                "
-btnCfgSELECT	db $D0,$1A,$A6,$7F,$24,$4F,$85,$A5,$FE,$3F,$A9,$2D,$12,$21,$5E,$CA,$F3,$4E,$84,$3B,$ED,$FC,$32,$A5,$D0,$1A,$76,$2D,$DF,$FC,$32,$A5,$7B ;"  Press NES SELECT...           "
-btnCfgSTART		db $7B,$33,$D3,$16,$47,$D9,$E0,$9F,$A9,$58,$D6,$C4,$35,$BA,$AE,$D1,$AF,$41,$B1,$D2,$02,$86,$8D,$9F,$7B,$33,$A3,$C4,$02,$86,$8D,$9F,$81 ;"  Press NES START...            "
-btnCfgUP		db $45,$0F,$CC,$C3,$6C,$1E,$67,$62,$73,$34,$CF,$71,$5C,$FB,$22,$70,$53,$0F,$9C,$71,$27,$CB,$14,$62,$45,$0F,$9C,$71,$27,$CB,$14,$62,$BE ;"  Press NES UP...               "
-btnCfgDOWN		db $35,$AF,$0C,$44,$6B,$20,$73,$7A,$63,$D4,$0F,$F2,$4A,$FC,$57,$A8,$43,$BD,$EA,$F2,$26,$CD,$20,$7A,$35,$AF,$DC,$F2,$26,$CD,$20,$7A,$A6 ;"  Press NES DOWN...             "
-btnCfgLEFT		db $39,$B7,$DC,$24,$2B,$A1,$70,$80,$67,$DC,$DF,$D2,$12,$73,$43,$B4,$47,$C5,$BA,$D2,$E6,$4E,$1D,$80,$39,$B7,$AC,$D2,$E6,$4E,$1D,$80,$A0 ;"  Press NES LEFT...             "
-btnCfgRIGHT		db $93,$63,$73,$55,$C9,$D4,$DA,$8B,$C1,$88,$76,$03,$B6,$AA,$AE,$B3,$C7,$71,$51,$11,$84,$81,$87,$8B,$93,$63,$43,$03,$84,$81,$87,$8B,$95 ;"  Press NES RIGHT...            "
-btnCfgTurboA	db $86,$8D,$CF,$CD,$78,$F6,$17,$02,$BA,$E2,$F1,$BD,$82,$A3,$F8,$51,$CD,$D4,$EB,$C0,$33,$C4,$D2,$10,$94,$8D,$9F,$7B,$33,$A3,$C4,$02,$1E ;"  Press Turbo Toggle A...       "
-btnCfgTurboB	db $C4,$02,$B6,$DF,$E4,$CE,$86,$A3,$F8,$57,$D8,$CF,$EE,$7B,$67,$F2,$0B,$49,$D2,$D2,$9F,$9D,$41,$B1,$D2,$02,$86,$8D,$9F,$7B,$33,$A3,$7D ;"  Press Turbo Toggle B...       "
+btnCfgA		db "  Press NES A...                "
+btnCfgB		db "  Press NES B...                "
+btnCfgSELECT	db "  Press NES SELECT...           "
+btnCfgSTART	db "  Press NES START...            "
+btnCfgUP	db "  Press NES UP...               "
+btnCfgDOWN	db "  Press NES DOWN...             "
+btnCfgLEFT	db "  Press NES LEFT...             "
+btnCfgRIGHT	db "  Press NES RIGHT...            "
+btnCfgTurboA	db "  Press Turbo Toggle A...       "
+btnCfgTurboB	db "  Press Turbo Toggle B...       "
 
-GGline1			db $78,$29,$D7,$EC,$52,$06,$50,$19,$9D,$29,$D7,$1C,$52,$E5,$7F,$19,$78,$63,$D7,$EC,$8A,$E5,$50,$45,$78,$29,$0C,$EC,$52,$E5,$50,$19,$07 ;"     A  E  P  O  Z  X  L  U     "
-GGline2			db $6A,$55,$EF,$5C,$F1,$4F,$C9,$18,$95,$55,$EF,$85,$F1,$28,$FC,$18,$6A,$89,$EF,$5C,$27,$28,$C9,$51,$6A,$55,$1D,$5C,$F1,$28,$C9,$18,$08 ;"     G  K  I  S  T  V  Y  N     "
-GGcode			db $BD,$C0,$BA,$B6,$AE,$DE,$FE,$3E,$FC,$C0,$F9,$B6,$ED,$DE,$3D,$3E,$FC,$C0,$F9,$B6,$ED,$DE,$3D,$3E,$BD,$C0,$BA,$B6,$AE,$DE,$FE,$3E,$E2 ;"        _ _ _ _ _ _ _ _         "
+GGline1			db "     A  E  P  O  Z  X  L  U     "
+GGline2			db "     G  K  I  S  T  V  Y  N     "
+GGcode			db "        _ _ _ _ _ _ _ _         "
 
+;mapperUnsupportedMsg1	db "Game uses an unsupported mapper."
+;mapperUnsupportedMsg2   db "Mapper number = $               "
+;mapperUnsupportedMsg3 	db "Returning to selection screen..."
+;mapperWasUnsupported	db 0
+;unsupportedMapperNumber		db 0
+chrDisabled	db 0
+mapperNoSRAM	db 0
 
 ; from the .NES header...
 prgCount	db	0
@@ -8917,7 +9438,7 @@ cdfilepos_rombank	dw	$0
 cdfilepos_saveicon	dw	$0
 cdfilepos_nes		dw	$0
 
-txtEnterCode	db	$23,$89,$F9,$F5,$F4,$06,$3E,$ED,$00,$3A,$B5,$B0,$DA,$26,$80,$22,$53,$8D,$B5,$0F,$DA,$3C,$7D,$2F,$00,$89,$05,$04,$23,$45,$7C,$30,$43 ;"Code:000     Press  for options"
+txtEnterCode	db	"Code:000     Press  for options"
 
 fname	db	"%08x",13,10,0
 pfmsg	db	"Got CD Interupt %2x",13,10,0
@@ -8991,6 +9512,8 @@ saveSP dw 0
 saveS0 dw 0
 saveS1 dw 0
 saveFP dw 0
+
+saveRA2 dw 0
 
 copyrightStartTime	dw	$0
 
